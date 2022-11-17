@@ -31,10 +31,6 @@ break
 ;;
 
 "Restart Node")
-echo -e "\e[1m\e[32m    Enter eth address:\e[0m"
-echo "_|-_|-_|-_|-_|-_|-_|"
-read addr
-echo "_|-_|-_|-_|-_|-_|-_|"
 
 docker_id=$(sudo docker ps | grep exorde | cut -d ' ' -f 1)
 echo "$docker_id"
