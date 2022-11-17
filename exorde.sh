@@ -49,8 +49,6 @@ break
 "Check Log")
 docker_id=$(sudo docker ps | grep exorde | cut -d ' ' -f 1)
 echo "$docker_id"
-sudo docker stop $docker_id
-sudo docker rm $docker_id
 sudo docker logs $docker_id -f
 
 break
