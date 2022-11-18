@@ -32,7 +32,7 @@ break
 
 "Restart Node")
 
-docker_id=$(sudo docker ps | grep exorde | cut -d ' ' -f 1)
+docker_id=$(sudo docker ps -a | grep exorde | cut -d ' ' -f 1)
 echo "$docker_id"
 sudo docker stop $docker_id
 sudo docker rm $docker_id
