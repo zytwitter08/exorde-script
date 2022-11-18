@@ -34,8 +34,15 @@ break
 
 docker_id=$(sudo docker ps -a | grep exorde | cut -d ' ' -f 1)
 echo "$docker_id"
-sudo docker stop $docker_id
-sudo docker rm $docker_id
+
+if [[ -n $docker_id ]]
+then
+  echo "delete old instance"
+  sudo docker stop $docker_id
+  sudo docker rm $docker_id
+else
+  echo "docker instance is empty"
+fi
 
 sudo docker run -d --restart unless-stopped --pull always --name exorde-cli rg.fr-par.scw.cloud/exorde-labs/exorde-cli -m $ETH_ADDR -l 3
 
