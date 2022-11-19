@@ -47,7 +47,7 @@ echo "_|-_|-_|-_|-_|-_|-_|"
 
 for((i=1; i<=$num; i++)); do
   echo "========== Restart worker $i =========="
-  docker_id=$(sudo docker ps -a | grep exorde-cli-$i | cut -d ' ' -f 1)
+  docker_id=$(sudo docker ps -a | grep "exorde-cli-${i}$" | cut -d ' ' -f 1)
   echo "$docker_id"
 
   if [[ -n $docker_id ]]
@@ -73,7 +73,7 @@ echo "_|-_|-_|-_|-_|-_|-_|"
 read wid
 echo "_|-_|-_|-_|-_|-_|-_|"
 
-docker_id=$(sudo docker ps | grep exorde-cli-$wid | cut -d ' ' -f 1)
+docker_id=$(sudo docker ps | grep "exorde-cli-${wid}$" | cut -d ' ' -f 1)
 echo "$docker_id"
 sudo docker logs $docker_id -f
 
