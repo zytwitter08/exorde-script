@@ -18,13 +18,21 @@ echo "_|-_|-_|-_|-_|-_|-_|"
 read addr
 echo "_|-_|-_|-_|-_|-_|-_|"
 
+echo -e "\e[1m\e[32m    Enter worker number:\e[0m"
+echo "_|-_|-_|-_|-_|-_|-_|"
+read num
+echo "_|-_|-_|-_|-_|-_|-_|"
+
 wget -O get-docker.sh https://get.docker.com
 sudo bash get-docker.sh
 
 echo 'export ETH_ADDR='${addr} >> $HOME/.profile
 source $HOME/.profile
 
-sudo docker run -d --restart unless-stopped --pull always --name exorde-cli rg.fr-par.scw.cloud/exorde-labs/exorde-cli -m $ETH_ADDR -l 3
+for((i=1; i<=$num; i++)); do
+  echo "========== Start worker $i =========="
+  sudo docker run -d --restart unless-stopped --pull always --name exorde-cli-$i rg.fr-par.scw.cloud/exorde-labs/exorde-cli -m $ETH_ADDR -l 3
+done
 
 
 break
@@ -32,25 +40,40 @@ break
 
 "Restart Node")
 
-docker_id=$(sudo docker ps -a | grep exorde | cut -d ' ' -f 1)
-echo "$docker_id"
+echo -e "\e[1m\e[32m    Enter worker number:\e[0m"
+echo "_|-_|-_|-_|-_|-_|-_|"
+read num
+echo "_|-_|-_|-_|-_|-_|-_|"
 
-if [[ -n $docker_id ]]
-then
-  echo "delete old instance"
-  sudo docker stop $docker_id
-  sudo docker rm $docker_id
-else
-  echo "docker instance is empty"
-fi
+for((i=1; i<=$num; i++)); do
+  echo "========== Restart worker $i =========="
+  docker_id=$(sudo docker ps -a | grep exorde-cli-$i | cut -d ' ' -f 1)
+  echo "$docker_id"
 
-sudo docker run -d --restart unless-stopped --pull always --name exorde-cli rg.fr-par.scw.cloud/exorde-labs/exorde-cli -m $ETH_ADDR -l 3
+  if [[ -n $docker_id ]]
+  then
+    echo "delete old instance"
+    sudo docker stop $docker_id
+    sudo docker rm $docker_id
+  else
+    echo "docker instance is empty"
+  fi
+
+  sudo docker run -d --restart unless-stopped --pull always --name exorde-cli-$i rg.fr-par.scw.cloud/exorde-labs/exorde-cli -m $ETH_ADDR -l 3
+done
+
 
 break
 ;;
 
 "Check Log")
-docker_id=$(sudo docker ps | grep exorde | cut -d ' ' -f 1)
+
+echo -e "\e[1m\e[32m    Enter worker id:\e[0m"
+echo "_|-_|-_|-_|-_|-_|-_|"
+read wid
+echo "_|-_|-_|-_|-_|-_|-_|"
+
+docker_id=$(sudo docker ps | grep exorde-cli-$wid | cut -d ' ' -f 1)
 echo "$docker_id"
 sudo docker logs $docker_id -f
 
