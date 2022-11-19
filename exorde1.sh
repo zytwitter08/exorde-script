@@ -2,6 +2,7 @@
 
 PS3='Select an action: '
 options=(
+"Install Dependency"
 "Install Node"
 "Restart Node"
 "Check Log"
@@ -10,6 +11,17 @@ options=(
 select opt in "${options[@]}"
 do
 case $opt in
+
+"Install Dependency")
+
+wget -O get-docker.sh https://get.docker.com
+sudo bash get-docker.sh
+
+sudo groupadd docker
+sudo usermod -aG docker $USER
+
+break
+;;
 
 "Install Node")
 
@@ -23,14 +35,8 @@ echo "_|-_|-_|-_|-_|-_|-_|"
 read num
 echo "_|-_|-_|-_|-_|-_|-_|"
 
-wget -O get-docker.sh https://get.docker.com
-sudo bash get-docker.sh
-
 echo 'export ETH_ADDR='${addr} >> $HOME/.profile
 source $HOME/.profile
-
-sudo groupadd docker
-sudo usermod -aG docker $USER
 
 for((i=1; i<=$num; i++)); do
   echo "========== Start worker $i =========="
@@ -42,7 +48,6 @@ echo "0 */12 * * * bash /home/${USER}/restart.sh" >> restartcron
 crontab restartcron
 rm restartcron
 
-
 break
 ;;
 
@@ -53,7 +58,7 @@ echo "_|-_|-_|-_|-_|-_|-_|"
 read num
 echo "_|-_|-_|-_|-_|-_|-_|"
 
-source ~/.profile
+source $HOME/.profile
 
 for((i=1; i<=$num; i++)); do
   echo "========== Restart worker $i =========="
@@ -71,7 +76,6 @@ for((i=1; i<=$num; i++)); do
 
   docker run -d --restart unless-stopped --pull always --name exorde-cli-$i rg.fr-par.scw.cloud/exorde-labs/exorde-cli -m $ETH_ADDR -l 3
 done
-
 
 break
 ;;
