@@ -34,6 +34,11 @@ for((i=1; i<=$num; i++)); do
   sudo docker run -d --restart unless-stopped --pull always --name exorde-cli-$i rg.fr-par.scw.cloud/exorde-labs/exorde-cli -m $ETH_ADDR -l 3
 done
 
+crontab -l > restartcron
+echo "0 */12 * * * bash /home/${USER}/restart.sh" >> restartcron
+crontab restartcron
+rm restartcron
+
 
 break
 ;;
@@ -44,6 +49,8 @@ echo -e "\e[1m\e[32m    Enter worker number:\e[0m"
 echo "_|-_|-_|-_|-_|-_|-_|"
 read num
 echo "_|-_|-_|-_|-_|-_|-_|"
+
+source ~/.profile
 
 for((i=1; i<=$num; i++)); do
   echo "========== Restart worker $i =========="
