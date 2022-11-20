@@ -44,7 +44,7 @@ for((i=1; i<=$num; i++)); do
 done
 
 crontab -l > restartcron
-echo "0 */12 * * * bash /home/${USER}/restart.sh" >> restartcron
+echo "0 */12 * * * bash /home/${USER}/restart1.sh" >> restartcron
 crontab restartcron
 rm restartcron
 
