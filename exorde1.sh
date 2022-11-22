@@ -6,6 +6,7 @@ options=(
 "Install Node"
 "Restart Node"
 "Check Log"
+"Cleanup"
 "Exit")
 
 select opt in "${options[@]}"
@@ -90,6 +91,14 @@ echo "_|-_|-_|-_|-_|-_|-_|"
 docker_id=$(docker ps | grep "exorde-cli-${wid}$" | cut -d ' ' -f 1)
 echo "$docker_id"
 docker logs $docker_id -f
+
+break
+;;
+
+"Cleanup")
+
+docker rm $(docker ps -a -q) --force
+docker rmi $(docker images -a -q) --force
 
 break
 ;;
