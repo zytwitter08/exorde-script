@@ -41,7 +41,7 @@ source $HOME/.profile
 
 for((i=1; i<=$num; i++)); do
   echo "========== Start worker $i =========="
-  docker run -d --restart unless-stopped --pull always --name exorde-cli-$i rg.fr-par.scw.cloud/exorde-labs/exorde-cli -m $ETH_ADDR -l 3
+  docker run -d --restart unless-stopped --pull always --name exorde-cli-$i exordelabs/exorde-cli -m $ETH_ADDR -l 3
 done
 
 crontab -l > restartcron
@@ -75,7 +75,7 @@ for((i=1; i<=$num; i++)); do
     echo "docker instance is empty"
   fi
 
-  docker run -d --restart unless-stopped --pull always --name exorde-cli-$i rg.fr-par.scw.cloud/exorde-labs/exorde-cli -m $ETH_ADDR -l 3
+  docker run -d --restart unless-stopped --pull always --name exorde-cli-$i exordelabs/exorde-cli -m $ETH_ADDR -l 3
 done
 
 break
