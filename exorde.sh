@@ -4,6 +4,7 @@ PS3='Select an action: '
 options=(
 "Install Node"
 "Restart Node"
+"Restart Single"
 "Check Log"
 "Exit")
 
@@ -31,7 +32,7 @@ source $HOME/.profile
 
 for((i=1; i<=$num; i++)); do
   echo "========== Start worker $i =========="
-  sudo docker run -d --restart unless-stopped --pull always --name exorde-cli-$i rg.fr-par.scw.cloud/exorde-labs/exorde-cli -m $ETH_ADDR -l 3
+  sudo docker run -d --restart unless-stopped --pull always --name exorde-cli-$i exordelabs/exorde-cli -m $ETH_ADDR -l 3
 done
 
 crontab -l > restartcron
@@ -66,9 +67,33 @@ for((i=1; i<=$num; i++)); do
     echo "docker instance is empty"
   fi
 
-  sudo docker run -d --restart unless-stopped --pull always --name exorde-cli-$i rg.fr-par.scw.cloud/exorde-labs/exorde-cli -m $ETH_ADDR -l 3
+  sudo docker run -d --restart unless-stopped --pull always --name exorde-cli-$i exordelabs/exorde-cli -m $ETH_ADDR -l 3
 done
 
+
+break
+;;
+
+"Restart Single")
+
+echo -e "\e[1m\e[32m    Enter worker id:\e[0m"
+echo "_|-_|-_|-_|-_|-_|-_|"
+read wid
+echo "_|-_|-_|-_|-_|-_|-_|"
+
+docker_id=$(sudo docker ps | grep "exorde-cli-${wid}$" | cut -d ' ' -f 1)
+echo "$docker_id"
+
+if [[ -n $docker_id ]]
+then
+  echo "delete old instance"
+  sudo docker stop $docker_id
+  sudo docker rm $docker_id
+else
+  echo "docker instance is empty"
+fi
+
+sudo docker run -d --restart unless-stopped --pull always --name exorde-cli-${wid} exordelabs/exorde-cli -m $ETH_ADDR -l 3
 
 break
 ;;
